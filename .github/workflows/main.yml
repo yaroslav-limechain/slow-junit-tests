@@ -1,15 +1,21 @@
 name: Quick Check file
 
 on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      file_name:
-        description: "File to check"
-        default: "./data.txt"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    inputs:
+      file_name:
+        description: "File to check"
+        default: "./data.txt"
 
     steps:
       - uses: actions/checkout@v4
