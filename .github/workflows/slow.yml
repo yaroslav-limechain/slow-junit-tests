@@ -7,7 +7,7 @@ on:
 
 jobs:
   quick_test:
-    if: github.event.review.state == 'APPROVED'
+    if: github.event.review.state == 'APPROVED' && github.event.label.name == 'proceed slow checks'
     runs-on: ubuntu-latest
 
     steps:
