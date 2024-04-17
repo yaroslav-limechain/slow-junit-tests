@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  quick_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,4 +21,3 @@ jobs:
           if [ ! -e "./data.txt" ]; then
             exit 1
           fi
-          
