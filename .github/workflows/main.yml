@@ -12,16 +12,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    inputs:
-      file_name:
-        description: "File to check"
-        default: "./data.txt"
 
     steps:
       - uses: actions/checkout@v4
 
       - name: fast test
         run: |
-          if [ ! -e "${{ github.event.inputs.file_name }}" ]; then
+          if [ ! -e "./data" ]; then
             exit 1
           fi
