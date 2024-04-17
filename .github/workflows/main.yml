@@ -2,8 +2,8 @@ name: Octo Organization CI
 
 on:
   workflow_dispatch:
-    file_name:
-      name:
+    inputs:
+      file_name:
         description: "File to check"
         default: "./data.txt"
 
@@ -15,4 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: fast test
-        run: [ -e ${{ github.event.file_name.name }} ] || exit 1
+        run: |
+          if [ ! -e "${{ github.event.inputs.file_name }}" ]; then
+            exit 1
+          fi
