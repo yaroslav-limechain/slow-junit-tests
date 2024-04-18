@@ -1,16 +1,25 @@
 name: Slow Check file
 
 on:
-  pull_request:
-    types: [labeled]
-
+  pull_request_review:
+    types: [submitted]
+  workflow_dispatch:
 
 jobs:
   slow_test:
-    if: ${{ github.event.label.name == 'your_label_name' }}
+    if:  github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      ORG_NAME: ${{ github.repository_owner }}
+      GITHUB_REPO: ${{ github.event.repository.name }}
+      YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
+      ACTOR: ${{ github.event.actor.login }}
+
+
     steps:
       - uses: actions/checkout@v4
       - name: slow test
         id: test
-        run: exit 1
+        run: echo $ACTOR
+  
