@@ -25,7 +25,6 @@ jobs:
       - name: Merge request
         if: steps.test.outcome == 'success'
         run: |
-          TOKEN="$YARO_TOKEN"
           API_URL="https://api.github.com/repos/$GITHUB_REPO/pulls/$PR_NUMBER/merge"
-          RESPONSE=$(curl -s -X PUT -H "Authorization: token $TOKEN" -d '{"merge_method":"squash"}' $API_URL)
+          RESPONSE=$(curl -s -X PUT -H "Authorization: token $YARO_TOKEN" -d '{"merge_method":"squash"}' $API_URL)
           echo "Response: $RESPONSE"
