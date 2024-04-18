@@ -1,24 +1,22 @@
-name: Slow Check file
+# name: Slow Check file
 
-on:
-  pull_request_review:
-    types: [submitted]
-  workflow_dispatch:
+# on:
+#   pull_request_review:
+#     types: [submitted]
+#   workflow_dispatch:
 
-jobs:
-  slow_test:
-    if:  github.event.review.state == 'APPROVED' 
-    runs-on: ubuntu-latest
+# jobs:
+#   slow_test:
+#     if:  github.event.review.state == 'APPROVED'  &&  github.event.label.name == 'bug' 
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Debugging output
-        run: |
-          echo "Review state: ${{ github.event.review.state }}"
-          echo "Label name: ${{ github.event.label.name }}"
+#     steps:
+#       - uses: actions/checkout@v4
+#       - name: Debugging output
+#         run: |
+#           echo "Review state: ${{ github.event.review.state }}"
+#           echo "Label name: ${{ github.event.label.name }}"
 
-      - name: slow test
-        run: exit 0
+#       - name: slow test
+#         run: exit 0
 
-
-        
