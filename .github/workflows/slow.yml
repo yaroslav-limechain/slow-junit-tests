@@ -9,7 +9,11 @@ jobs:
   slow_test:
     if:  github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
-
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+      GITHUB_REPO: ${{ github.event.repository.name }}
+      YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
+    
     steps:
       - uses: actions/checkout@v4
       # - name: Debugging output
@@ -21,12 +25,12 @@ jobs:
         id: test
         run: exit 0
       
-      - name: Create artifact of test coverage
+      - name: Merge request
         if: steps.test.outcome == 'success'
         run: |
           TOKEN="$YARO_TOKEN"
-          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          GITHUB_REPO=$(jq --raw-output .repository.full_name "$GITHUB_EVENT_PATH")
+#          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+#          GITHUB_REPO=$(jq --raw-output .repository.full_name "$GITHUB_EVENT_PATH")
           API_URL="https://api.github.com/repos/$GITHUB_REPO/pulls/$PR_NUMBER/merge"
           RESPONSE=$(curl -s -X PUT -H "Authorization: token $TOKEN" -d '{"merge_method":"squash"}' $API_URL)
           echo "Response: $RESPONSE"
