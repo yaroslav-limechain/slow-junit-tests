@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: initiate slow test
+        id: init_slow_test
         run: |
         API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
         TEAM_MEMBERS=$(curl -s -L \
@@ -39,5 +40,5 @@ jobs:
         exit 1
 
       - name: slow test
-        id: test
+      if: steps.init_slow_test.outcome == 'success'
         run: exit 0
