@@ -16,10 +16,7 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      # - name: Debugging output
-      #   run: |
-      #     echo "Review state: ${{ github.event.review.state }}"
-      #     echo "Label name: ${{ github.event.label.name }}"
+
 
       - name: slow test
         id: test
@@ -29,8 +26,6 @@ jobs:
         if: steps.test.outcome == 'success'
         run: |
           TOKEN="$YARO_TOKEN"
-#          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-#          GITHUB_REPO=$(jq --raw-output .repository.full_name "$GITHUB_EVENT_PATH")
           API_URL="https://api.github.com/repos/$GITHUB_REPO/pulls/$PR_NUMBER/merge"
           RESPONSE=$(curl -s -X PUT -H "Authorization: token $TOKEN" -d '{"merge_method":"squash"}' $API_URL)
           echo "Response: $RESPONSE"
