@@ -7,15 +7,25 @@ on:
 
 jobs:
   slow_test:
-    if:  github.event_name == 'pull_request_review' && github.event.review.state == 'APPROVED' && contains(github.event.pull_request.labels.*.name, 'bug')
+    if:  github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
-
+    env:
+      PR_NUMBER: ${{ github.event.number }}
+      GITHUB_REPO: ${{ github.event.repository.name }}
+      YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
+    
     steps:
       - uses: actions/checkout@v4
-      - name: Debugging output
-        run: |
-          echo "Review state: ${{ github.event.review.state }}"
-          echo "Label name: ${{ github.event.label.name }}"
+
 
       - name: slow test
+        id: test
         run: exit 0
+      
+      - name: Merge request
+        if: steps.test.outcome == 'success'
+        run: |
+          TOKEN="$YARO_TOKEN"
+          API_URL="https://api.github.com/repos/$GITHUB_REPO/pulls/$PR_NUMBER/merge"
+          RESPONSE=$(curl -s -X PUT -H "Authorization: token $TOKEN" -d '{"merge_method":"squash"}' $API_URL)
+          echo "Response: $RESPONSE"
