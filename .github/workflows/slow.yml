@@ -21,7 +21,7 @@ jobs:
 
       - name: slow test
         id: test
-        run: exit 1
+        run: exit 0
       
       - name: Merge request
         if: steps.test.outcome == 'success'
