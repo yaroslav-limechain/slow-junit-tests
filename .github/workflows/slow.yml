@@ -21,7 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: slow test
-        id: test
         run: |
           API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
           TEAM_MEMBERS=$(curl -s -L \
