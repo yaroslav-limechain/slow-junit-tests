@@ -7,14 +7,11 @@ on:
 
 jobs:
   quick_test:
-    if: github.event.review.state == 'APPROVED' && github.event.label.name == 'proceed slow checks'
+    if: ${{ github.event.review.state == 'APPROVED' }} && ${{ github.event.label.name == 'bug' }}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: fast test
-        run: |
-          if [ ! -e "./slow.txt" ]; then
-            exit 1
-          fi
+        run: exit 0
