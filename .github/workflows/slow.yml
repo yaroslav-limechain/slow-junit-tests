@@ -17,14 +17,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-
       - name: slow test
         id: test
         run: exit 0
-      
+  merge:
+    runs-on: ubuntu-latest
+    needs: slow_test
+    if: ${{ success() }}
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      ORG_NAME: ${{ github.repository_owner }}
+      GITHUB_REPO: ${{ github.event.repository.name }}
+      YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
+
+
+    steps:
       - name: Merge request
-        if: steps.test.outcome == 'success'
+
         run: |
           API_URL="https://api.github.com/repos/$ORG_NAME/$GITHUB_REPO/pulls/$PR_NUMBER/merge"
           echo $API_URL
