@@ -6,12 +6,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  quick_test:
+  slow_test:
     if: ${{ github.event.review.state == 'APPROVED' }} && ${{ github.event.label.name == 'bug' }}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+      - name: Debugging output
+      run: |
+        echo "Review state: ${{ github.event.review.state }}"
+        echo "Label name: ${{ github.event.label.name }}"
 
-      - name: fast test
+      - name: slow test
         run: exit 0
