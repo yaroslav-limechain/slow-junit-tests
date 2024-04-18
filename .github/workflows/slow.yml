@@ -14,7 +14,7 @@ jobs:
       ORG_NAME: ${{ github.repository_owner }}
       GITHUB_REPO: ${{ github.event.repository.name }}
       YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
-      ACTOR: ${{ github.event.actor.login }}
+      ACTOR: ${{ github.actor }}
 
 
     steps:
