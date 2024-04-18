@@ -10,10 +10,10 @@ jobs:
     if:  github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     env:
-      PR_NUMBER: ${{ github.event.number }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
       GITHUB_REPO: ${{ github.event.repository.name }}
       YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
-    
+
     steps:
       - uses: actions/checkout@v4
 
