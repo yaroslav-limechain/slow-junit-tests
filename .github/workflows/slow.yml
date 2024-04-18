@@ -1,23 +1,40 @@
-# name: Slow Check file
+name: Slow Check file
 
-# on:
-#   pull_request_review:
-#     types: [submitted]
-#   workflow_dispatch:
+on:
+  pull_request_review:
+    types: [submitted]
+  workflow_dispatch:
 
-# jobs:
-#   slow_test:
-#     if:  github.event.review.state == 'APPROVED'  &&  github.event.label.name == 'bug' 
-#     runs-on: ubuntu-latest
+jobs:
+  slow_test:
+    if:  github.event.review.state == 'APPROVED' 
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Debugging output
-#         run: |
-#           echo "Review state: ${{ github.event.review.state }}"
-#           echo "Label name: ${{ github.event.label.name }}"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove Previous Approvals
+      run: |
+        # Get the current pull request number
+        PR_NUMBER=$(echo "${GITHUB_REF}" | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        
+        # List reviews for the pull request
+        REVIEWS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                  "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/reviews")
+        
+        # Loop through reviews and delete approved reviews
+        for REVIEW_ID in $(echo "${REVIEWS}" | jq -r '.[] | select(.state == "APPROVED") | .id'); do
+          curl -X DELETE -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/pulls/${PR_NUMBER}/reviews/${REVIEW_ID}"
+        done
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Debugging output
+        run: |
+          echo "Review state: ${{ github.event.review.state }}"
+          echo "Label name: ${{ github.event.label.name }}"
 
-#       - name: slow test
-#         run: exit 0
+      - name: slow test
+        run: exit 0
 
 
