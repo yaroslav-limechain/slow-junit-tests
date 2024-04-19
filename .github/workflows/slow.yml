@@ -6,36 +6,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  slow_test:
-    if:  github.event.review.state == 'APPROVED'
+  check_approve:
+    if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     env:
       PR_NUMBER: ${{ github.event.pull_request.number }}
       ORG_NAME: ${{ github.repository_owner }}
       GITHUB_REPO: ${{ github.event.repository.name }}
       YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
+      ACTOR: ${{ github.actor }}
+      TEAM_NAME: yaro-team
 
     steps:
       - uses: actions/checkout@v4
-      - name: slow test
-        id: test
-        run: exit 0
-  merge:
-    runs-on: ubuntu-latest
-    needs: slow_test
-    if: ${{ success() }}
-    env:
-      PR_NUMBER: ${{ github.event.pull_request.number }}
-      ORG_NAME: ${{ github.repository_owner }}
-      GITHUB_REPO: ${{ github.event.repository.name }}
-      YARO_TOKEN: ${{ secrets.YARO_TOKEN }}
-
-
-    steps:
-      - name: Merge request
-
+      - name: initiate slow test
+        id: init_slow_test
         run: |
-          API_URL="https://api.github.com/repos/$ORG_NAME/$GITHUB_REPO/pulls/$PR_NUMBER/merge"
-          echo $API_URL
-          RESPONSE=$(curl -s -X PUT -H "Authorization: token $YARO_TOKEN" -d '{"merge_method":"squash"}' $API_URL)
-          echo "Response: $RESPONSE"
+          API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
+          TEAM_MEMBERS=$(curl -s -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $YARO_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            $API_URL | jq -r '.[] | .login')
+            
+          for member in $TEAM_MEMBERS
+          do
+            if [ "$member" = "$ACTOR" ]
+            then
+              exit 0
+            fi
+          done
+          exit 1
+
+  slow_test:
+    runs-on: ubuntu-latest
+    needs: check_approve
+    if: ${{ needs.check_approve.result == 'success' }}
+    steps:
+      - name: slow test
+        run: exit 0
