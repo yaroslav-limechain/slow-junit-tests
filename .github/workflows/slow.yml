@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  slow_test:
+  check_approve:
     if:  github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     env:
@@ -38,7 +38,7 @@ jobs:
           fi
         done
         exit 1
-
+  slow_test:
       - name: slow test
         if: steps.init_slow_test.outcome == 'success'
           run: exit 0
