@@ -49,4 +49,4 @@ jobs:
     if: ${{ needs.check_approve.result == 'success' }}
     steps:
       - name: slow test
-        run: exit 0
+        run: exit 1
