@@ -1,4 +1,4 @@
-name: Quick Check file
+name: Quick Check
 
 on:
   push:

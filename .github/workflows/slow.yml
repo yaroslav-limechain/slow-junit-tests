@@ -1,4 +1,4 @@
-name: Slow Check file
+name: Slow Check
 
 on:
   pull_request_review:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: initiate slow test
+      - name: Check If Approval belongs to team
         id: init_slow_test
         run: |
           API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
