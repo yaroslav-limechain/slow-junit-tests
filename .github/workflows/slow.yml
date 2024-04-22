@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_approve:
-    if: github.event.review.state == 'APPROVED'
+    if: github.event.review.state == 'APPROVED' && approved_by_team_member()
     runs-on: ubuntu-latest
     env:
       PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -50,3 +50,21 @@ jobs:
     steps:
       - name: slow test
         run: exit 0
+
+
+functions:
+  approved_by_team_member: |
+    API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
+    TEAM_MEMBERS=$(curl -s -L \
+      -H "Accept: application/vnd.github+json" \
+      -H "Authorization: Bearer $YARO_TOKEN" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      $API_URL | jq -r '.[] | .login')
+    
+    for MEMBER in $TEAM_MEMBERS; do
+      if [ "$MEMBER" = "${{ github.event.review.user.login }}" ]; then
+        exit 0  
+      fi
+    done
+    
+    exit 1
