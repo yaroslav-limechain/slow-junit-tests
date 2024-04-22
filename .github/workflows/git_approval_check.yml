@@ -6,7 +6,7 @@ on:
 
 jobs:
   check_approval:
-    needs: [quick_test]
+    id: check_approval
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     env:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check If Approval belongs to team
-        id: init_slow_test
+        id: 
         run: |
           API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
           TEAM_MEMBERS=$(curl -s -L \

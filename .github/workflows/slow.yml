@@ -1,12 +1,11 @@
 name: Slow Check
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["git_approval_check.yml"]
+    types:
+      - completed
+  
   workflow_dispatch:
 
 jobs:
@@ -16,3 +15,5 @@ jobs:
     steps:
       - name: slow test
         run: exit 0
+
+        
