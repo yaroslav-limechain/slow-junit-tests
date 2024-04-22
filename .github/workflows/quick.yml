@@ -12,9 +12,7 @@ on:
 jobs:
   quick_test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: fast_test
         run: exit 0

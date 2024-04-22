@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check If Approval belongs to team
-        id: init_slow_test
+        id: 
         run: |
           API_URL="https://api.github.com/orgs/$ORG_NAME/teams/$TEAM_NAME/members"
           TEAM_MEMBERS=$(curl -s -L \
@@ -35,5 +35,3 @@ jobs:
           done
           
           exit 1
-
-          
