@@ -6,7 +6,6 @@ on:
 
 jobs:
   check_approval:
-    id: check_approval
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     env:
