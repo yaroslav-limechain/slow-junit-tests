@@ -43,8 +43,3 @@ jobs:
     steps:
       - name: slow test
         run: exit 0
-
-
-
-  functions:
-    approved_by_team_member: |
