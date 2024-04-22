@@ -1,4 +1,4 @@
-name: Quick Check
+name: Quick Test
 
 on:
   push:
@@ -16,5 +16,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: fast test
+      - name: fast_test
         run: exit 0
