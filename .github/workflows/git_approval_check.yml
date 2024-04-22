@@ -1,12 +1,12 @@
-name: Slow Check
+name: Approval Check
 
 on:
   pull_request_review:
     types: [submitted]
-  workflow_dispatch:
 
 jobs:
   check_approval:
+    needs: [quick_test]
     if: github.event.review.state == 'APPROVED'
     runs-on: ubuntu-latest
     env:
