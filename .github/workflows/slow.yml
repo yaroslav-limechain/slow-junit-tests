@@ -7,7 +7,7 @@ on:
 
 jobs:
   check:
-    if: ${{github.event.review.state == 'APPROVED'}} OR ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event.review.state == 'APPROVED' }} OR ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     env:
       PR_NUMBER: ${{ github.event.pull_request.number }}
