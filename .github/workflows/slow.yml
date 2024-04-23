@@ -45,5 +45,7 @@ jobs:
     needs: [ check ]
     steps:
       - name: slow test
-        run: exit 0
+        run: |
+          sleep 10
+          exit 0
         
